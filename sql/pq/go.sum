@@ -1,0 +1,8 @@
+github.com/h-celel/go-ssf v0.0.0-20210920173939-f7bfe702be30 h1:6und8sTLYz7Bkotceax0Kut7AxJfBSe2AUl4SJfTg6E=
+github.com/h-celel/go-ssf v0.0.0-20210920173939-f7bfe702be30/go.mod h1:kZnvdBl1bFTKLUJPdlKeNQw3T20eJ8NlFzvKIBfB9Ns=
+github.com/h-celel/go-ssf/sql v0.0.0-20210920173939-f7bfe702be30 h1:sCJDSASHtLv3wLuIcICHtazSYtC/Nl6nlgIv3hK4A44=
+github.com/h-celel/go-ssf/sql v0.0.0-20210920173939-f7bfe702be30/go.mod h1:jIj2bQg+H3MVCb+d9adtF+erk9k/NAgPOjCKLtMOd0c=
+github.com/h-celel/mapenv v0.1.0 h1:tvkiC/CzlilZfct3qQ3ZTcch53Nbi5aKKw4M/8wYqXk=
+github.com/h-celel/mapenv v0.1.0/go.mod h1:q3wJE8sY5kmKXvtXbDG3hUaSVnSveTEi8nrQJM0BPFM=
+github.com/lib/pq v1.10.3 h1:v9QZf2Sn6AmjXtQeFpdoq/eaNtYP6IN+7lcrygsIAtg=
+github.com/lib/pq v1.10.3/go.mod h1:AlVN5x4E4T544tWzH6hKfbfQvm3HdbOxrmggDNAPY9o=
