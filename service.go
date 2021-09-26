@@ -41,6 +41,11 @@ func NewService(ctx context.Context) Service {
 func (s *defaultService) Status(ctx context.Context) error {
 	s.m.Lock()
 	defer s.m.Unlock()
+
+	if err := s.ctx.Err(); err != nil {
+		return err
+	}
+
 	for _, c := range s.components.GetAllComponents() {
 		if err := c.Status(ctx); err != nil {
 			return err
