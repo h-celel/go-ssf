@@ -10,6 +10,8 @@ import (
 )
 
 func InitComponent(service goSSF.Service, options *Option) error {
+	ctx := service.Context()
+
 	if service == nil {
 		return nil
 	}
@@ -30,7 +32,16 @@ func InitComponent(service goSSF.Service, options *Option) error {
 		return err
 	}
 
+	if err = db.PingContext(ctx); err != nil {
+		return err
+	}
+
 	c := &component{db: db}
+
+	go func() {
+		<-ctx.Done()
+		_ = c.db.Close()
+	}()
 
 	service.AddComponent(ssfSQL.ComponentType, c)
 

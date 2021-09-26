@@ -13,10 +13,6 @@ func (c *component) Status(ctx context.Context) error {
 	return c.db.PingContext(ctx)
 }
 
-func (c *component) Close() {
-	_ = c.db.Close()
-}
-
 func (c *component) GetDB() *sql.DB {
 	return c.db
 }
