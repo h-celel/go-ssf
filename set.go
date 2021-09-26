@@ -9,7 +9,7 @@ type ComponentSet interface {
 
 type defaultComponentSet map[ComponentType][]Component
 
-func NewComponentSet() ComponentSet {
+func newComponentSet() ComponentSet {
 	return &defaultComponentSet{}
 }
 

@@ -8,18 +8,34 @@ import (
 type Service interface {
 	ComponentSet
 	Status(ctx context.Context) error
-	Close()
-}
-
-func NewService() Service {
-	return &defaultService{
-		components: NewComponentSet(),
-	}
+	Shutdown()
+	SetShutdownCallback(func())
+	Context() context.Context
 }
 
 type defaultService struct {
-	m          sync.Mutex
-	components ComponentSet
+	ctx          context.Context
+	cancel       context.CancelFunc
+	m            sync.Mutex
+	components   ComponentSet
+	shutdownFunc func()
+}
+
+func NewService(ctx context.Context) Service {
+	ctx, cancel := context.WithCancel(ctx)
+
+	s := &defaultService{
+		ctx:        ctx,
+		cancel:     cancel,
+		components: newComponentSet(),
+	}
+
+	go func(ctx context.Context, s *defaultService) {
+		<-ctx.Done()
+		s.onShutdown()
+	}(ctx, s)
+
+	return s
 }
 
 func (s *defaultService) Status(ctx context.Context) error {
@@ -33,23 +49,20 @@ func (s *defaultService) Status(ctx context.Context) error {
 	return nil
 }
 
-func (s *defaultService) Close() {
+func (s *defaultService) Shutdown() {
 	s.m.Lock()
 	defer s.m.Unlock()
+	s.cancel()
+}
 
-	var wg sync.WaitGroup
+func (s *defaultService) Context() context.Context {
+	return s.ctx
+}
 
-	cs := s.components.GetAllComponents()
-	wg.Add(len(cs))
-
-	for _, c := range cs {
-		go func(c Component) {
-			c.Close()
-			wg.Done()
-		}(c)
-	}
-
-	wg.Wait()
+func (s *defaultService) SetShutdownCallback(f func()) {
+	s.m.Lock()
+	defer s.m.Unlock()
+	s.shutdownFunc = f
 }
 
 func (s *defaultService) GetAllComponents() []Component {
@@ -74,4 +87,10 @@ func (s *defaultService) AddComponent(componentType ComponentType, component Com
 	s.m.Lock()
 	defer s.m.Unlock()
 	s.components.AddComponent(componentType, component)
+}
+
+func (s *defaultService) onShutdown() {
+	if f := s.shutdownFunc; f != nil {
+		f()
+	}
 }
